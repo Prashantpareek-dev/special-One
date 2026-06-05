@@ -1194,14 +1194,23 @@ function runLoader(){
 }
 
 /* ─── Enter → reveal site & start hero ──────────────── */
-function enterSite(){
+let _entered = false;
+function reveal(){
   const loader=document.getElementById('loader');
-  gsap.to(loader,{opacity:0,duration:0.9,ease:'power2.inOut',onComplete:()=>{
-    loader.style.display='none';
-    document.body.classList.remove('loading');
-    ScrollTrigger.refresh();
-    startHero();
-  }});
+  loader.style.display='none';
+  document.body.classList.remove('loading');
+  if (window.gsap && gsap.registerPlugin) { try { ScrollTrigger.refresh(); } catch(e){} }
+  startHero();
+}
+function enterSite(){
+  if (_entered) return;          // guard: only reveal once
+  _entered = true;
+  const loader=document.getElementById('loader');
+  if (window.gsap) {
+    gsap.to(loader,{opacity:0,duration:0.9,ease:'power2.inOut',onComplete:reveal});
+  } else {
+    reveal();                    // GSAP failed to load — reveal instantly anyway
+  }
 }
 
 /* split the chars INSIDE each .word so a word never wraps mid-letter */
@@ -1324,6 +1333,7 @@ function initScrollAnims(){
         sEl=document.getElementById('cd-s'), msg=document.getElementById('cd-msg'),
         row=document.getElementById('cd-row');
   function pad(n){ return String(n).padStart(2,'0'); }
+  let t;
   function tick(){
     const diff=target-Date.now();
     if(diff<=0){ row.style.display='none'; msg.style.display='block'; clearInterval(t);
@@ -1331,7 +1341,7 @@ function initScrollAnims(){
     const h=Math.floor(diff/3.6e6), m=Math.floor(diff%3.6e6/6e4), s=Math.floor(diff%6e4/1e3);
     hEl.textContent=pad(h); mEl.textContent=pad(m); sEl.textContent=pad(s);
   }
-  tick(); const t=setInterval(tick,1000);
+  t=setInterval(tick,1000); tick();
 })();
 
 /* ─── Replay button ─────────────────────────────────── */
