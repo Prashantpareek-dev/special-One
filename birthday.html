@@ -181,7 +181,16 @@
     letter-spacing: 0.4em;
     text-transform: uppercase;
     color: var(--rose);
-    margin-bottom: 28px;
+    margin-bottom: 16px;
+    opacity: 0;
+  }
+
+  .hero-topline {
+    width: 90px;
+    height: 2px;
+    margin: 0 auto 20px;
+    background: linear-gradient(90deg, var(--gold), var(--rose));
+    border-radius: 999px;
     opacity: 0;
   }
 
@@ -189,14 +198,41 @@
     font-family: 'Bodoni Moda', serif;
     font-size: clamp(3.5rem, 10vw, 8rem);
     font-weight: 400;
-    line-height: 1.0;
+    line-height: 1.2;
     text-align: center;
     color: var(--deep);
-    overflow: hidden;
+    overflow: visible;
+    display: inline-block;
   }
 
-  .hero-title .word { display: inline-block; overflow: hidden; }
-  .hero-title .char { display: inline-block; transform: translateY(110%); }
+  /* each word stays on one line — never split "Birthday" across rows */
+  .hero-title .word {
+    display: block;
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 0 0.06em 0.12em;   /* breathing room so descenders/letters aren't clipped */
+  }
+  /* per-letter shimmer reveal */
+  .hero-title .char {
+    display: inline-block;
+    transform: translateY(120%) rotate(8deg);
+    opacity: 0;
+    background: linear-gradient(90deg, var(--deep) 0%, var(--rose) 50%, var(--gold) 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero-divider {
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--rose));
+    border-radius: 999px;
+    opacity: 0;
+    display: block;
+    margin: 0.2em auto;
+  }
 
   .hero-subtitle {
     font-family: 'Cormorant Garamond', serif;
@@ -286,8 +322,9 @@
   }
   .spotlight-quote .sw {
     display: inline-block;
+    white-space: nowrap;   /* keep each whole word together — never split letters */
+    margin-right: 0.32em;  /* visible gap between words (inline-block eats trailing spaces) */
     opacity: 0.12;
-    margin: 0 0.12em;
     transition: opacity .2s;
   }
   .spotlight-mark {
@@ -347,6 +384,58 @@
     opacity: 0.5;
     margin-left: auto;
     flex-shrink: 0;
+  }
+
+  /* ─── HIGHLIGHTS ──────────────────────────────────── */
+  #highlights {
+    background: linear-gradient(160deg, #fff5f7 0%, #fdf6ee 100%);
+    padding: 100px 40px;
+  }
+  .highlights-heading {
+    font-family: 'Bodoni Moda', serif;
+    font-size: clamp(2rem, 5vw, 3rem);
+    color: var(--deep);
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .highlight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 28px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .highlight-card {
+    background: #fff;
+    border: 1px solid rgba(232, 96, 122, 0.15);
+    border-radius: 20px;
+    padding: 32px 24px;
+    box-shadow: 0 18px 45px rgba(92, 48, 64, 0.12);
+    text-align: center;
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  .highlight-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 28px 60px rgba(92, 48, 64, 0.18);
+  }
+  .highlight-icon {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 14px;
+  }
+  .highlight-title {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 1.3rem;
+    color: var(--rose);
+    margin-bottom: 12px;
+  }
+  .highlight-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--mid);
   }
 
   /* ─── MEMORIES GRID ──────────────────────────────── */
@@ -564,6 +653,7 @@
     line-height: 1.1;
     overflow: hidden;
   }
+  .fword { display: inline-block; white-space: nowrap; }
   .finale-title .char { display: inline-block; transform: translateY(110%); }
   .finale-sub {
     font-family: 'Cormorant Garamond', serif;
@@ -607,6 +697,88 @@
     pointer-events: none;
     z-index: 0;
   }
+
+  /* ─── RESPONSIVE: fit every screen ────────────────── */
+
+  /* Use dynamic viewport height so mobile browser bars don't cut sections */
+  section { min-height: 100svh; }
+
+  /* Words in the spotlight never break mid-word, wrap as whole words */
+  .spotlight-quote { overflow-wrap: normal; word-break: keep-all; }
+
+  /* Tablets */
+  @media (max-width: 900px) {
+    section { padding: 72px 32px; }
+    .mem-grid { grid-template-columns: repeat(2, 1fr); }
+    .highlight-grid { grid-template-columns: repeat(2, 1fr); }
+    .spotlight-quote { font-size: clamp(1.9rem, 6.5vw, 3.2rem); }
+  }
+
+  /* Phones */
+  @media (max-width: 640px) {
+    section { padding: 56px 20px; }
+
+    .hero-date { font-size: 0.65rem; letter-spacing: 0.3em; }
+    .hero-topline { width: 70px; margin-bottom: 16px; }
+    .hero-title { font-size: clamp(2.2rem, 12vw, 3.6rem); gap: 0.25em; }
+    .hero-divider { width: 90px; height: 1.5px; }
+    .hero-subtitle { font-size: 1rem; letter-spacing: 0.01em; }
+    .hero-line { margin: 20px auto; }
+    .highlight-grid { grid-template-columns: 1fr; }
+    .highlight-card { padding: 24px 20px; }
+
+    .loader-name { font-size: clamp(1.7rem, 10vw, 2.8rem); padding: 0 12px; }
+    .loader-tag { font-size: 0.98rem; padding: 0 18px; text-align: center; }
+    #enter-btn { padding: 14px 32px; }
+
+    .marquee-track { padding: 16px 0; }
+    .marquee-track span { font-size: 1.4rem; padding: 0 22px; }
+
+    .spotlight-mark { font-size: 4.5rem; }
+    .spotlight-quote { font-size: clamp(1.5rem, 7.5vw, 2.2rem); line-height: 1.3; }
+
+    .q-line { flex-wrap: wrap; gap: 8px; padding: 16px 0; }
+    .q-num { min-width: auto; }
+    .q-text { font-size: 1.25rem; flex-basis: 100%; }
+    .q-glyph { margin-left: 0; }
+
+    .mem-heading { font-size: clamp(1.7rem, 7vw, 2.4rem); margin-bottom: 36px; }
+    .mem-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .polaroid { padding: 9px 9px 30px; }
+    .polaroid .cap { font-size: 0.88rem; margin-top: 10px; }
+
+    .cd-heading { font-size: clamp(1.5rem, 6vw, 2.2rem); margin-bottom: 36px; }
+    .cd-row { gap: 10px; }
+    .cd-box { min-width: 76px; padding: 16px 14px; }
+    .cd-num { font-size: 2.2rem; }
+    .cd-label { font-size: 0.55rem; }
+
+    .letter-card { padding: 36px 22px; }
+    .letter-heading { font-size: clamp(1.7rem, 6.5vw, 2.4rem); }
+    .letter-body { font-size: 1.08rem; line-height: 1.8; }
+
+    .finale-title { font-size: clamp(2.1rem, 10vw, 3.2rem); }
+    .finale-sub { font-size: 1.05rem; }
+  }
+
+  /* Small / narrow phones */
+  @media (max-width: 400px) {
+    .mem-grid { grid-template-columns: 1fr; max-width: 280px; margin: 0 auto; }
+    .cd-box { min-width: 68px; padding: 14px 10px; }
+    .cd-num { font-size: 1.9rem; }
+    .marquee-track span { font-size: 1.25rem; padding: 0 18px; }
+  }
+
+  /* Landscape phones — shrink vertical padding so content fits */
+  @media (max-height: 480px) and (orientation: landscape) {
+    section { min-height: auto; padding: 48px 28px; }
+    #hero { min-height: 100svh; }
+  }
+
+  /* Reduce motion for accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track, .scroll-arrow, .loader-name .caret { animation: none; }
+  }
 </style>
 </head>
 <body class="loading">
@@ -632,21 +804,47 @@
   <div class="blob" style="width:420px;height:420px;background:rgba(232,96,122,0.12);top:-80px;right:-120px;"></div>
   <div class="blob" style="width:300px;height:300px;background:rgba(201,151,90,0.1);bottom:-60px;left:-80px;"></div>
 
-  <p class="hero-date" id="hero-date">A Special Day for a Special Soul</p>
+  <p class="hero-date" id="hero-date">A special day for my brightest star ✦</p>
+
+  <div class="hero-topline" id="hero-topline"></div>
 
   <h1 class="hero-title" id="hero-title">
-    <span class="word">Happy&nbsp;</span><span class="word">Birthday</span>
+    <span class="word">Happy</span>
+    <span class="hero-divider" id="hero-divider"></span>
+    <span class="word">Birthday</span>
   </h1>
 
   <div class="hero-line" id="hero-line"></div>
 
   <p class="hero-subtitle" id="hero-sub">
-    You are my favourite part of every single day.
+    Every moment with you is a gift I never want to unwrap.
   </p>
 
   <div class="scroll-hint" id="scroll-hint">
     <span>scroll</span>
     <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ══ HIGHLIGHTS ═══════════════════════════════════ -->
+<section id="highlights">
+  <h2 class="highlights-heading">Why you make every day brighter</h2>
+  <div class="highlight-grid">
+    <div class="highlight-card">
+      <div class="highlight-icon">✨</div>
+      <div class="highlight-title">Your warmth</div>
+      <p class="highlight-text">You bring light to the darkest moments and comfort to every doubt.</p>
+    </div>
+    <div class="highlight-card">
+      <div class="highlight-icon">💝</div>
+      <div class="highlight-title">Your kindness</div>
+      <p class="highlight-text">Every gesture, every word reminds me how lucky I am to have you.</p>
+    </div>
+    <div class="highlight-card">
+      <div class="highlight-icon">🌟</div>
+      <div class="highlight-title">Your dreams</div>
+      <p class="highlight-text">You inspire me to be better, to dream bigger, to love deeper.</p>
+    </div>
   </div>
 </section>
 
@@ -702,12 +900,12 @@
   <p class="mem-eyebrow">moments with you</p>
   <h2 class="mem-heading">Little memories I hold close</h2>
   <div class="mem-grid" id="mem-grid">
-    <div class="polaroid" style="--tilt:-3deg;"><div class="photo">📷</div><p class="cap">our first day</p></div>
-    <div class="polaroid" style="--tilt:2deg;"><div class="photo">🌅</div><p class="cap">that morning</p></div>
-    <div class="polaroid" style="--tilt:-2deg;"><div class="photo">🎡</div><p class="cap">our little trip</p></div>
-    <div class="polaroid" style="--tilt:3deg;"><div class="photo">🍰</div><p class="cap">last birthday</p></div>
-    <div class="polaroid" style="--tilt:-2deg;"><div class="photo">🌙</div><p class="cap">late night talks</p></div>
-    <div class="polaroid" style="--tilt:2deg;"><div class="photo">💞</div><p class="cap">just us</p></div>
+    <div class="polaroid" style="--tilt:-3deg;"><div class="photo"><img src="./3.jpg" alt="our first day"></div><p class="cap">our first day</p></div>
+    <div class="polaroid" style="--tilt:2deg;"><div class="photo"><img src="./5.jpg" alt="that morning"></div><p class="cap">that morning</p></div>
+    <div class="polaroid" style="--tilt:-2deg;"><div class="photo"><img src="./6.jpg" alt="our little trip"></div><p class="cap">our little trip</p></div>
+    <div class="polaroid" style="--tilt:3deg;"><div class="photo"><img src="./1.jpg" alt="Best Moment"></div><p class="cap">Best Moment</p></div>
+    <div class="polaroid" style="--tilt:-2deg;"><div class="photo"><img src="./4.jpg" alt="late night talks"></div><p class="cap">late night talks</p></div>
+    <div class="polaroid" style="--tilt:2deg;"><div class="photo"><img src="./2.jpg" alt="just us"></div><p class="cap">just us</p></div>
   </div>
 </section>
 
@@ -775,7 +973,7 @@
 /* ════════════════════════════════════════════════════
    CONFIG — change her name & birthday date here
    ════════════════════════════════════════════════════ */
-const HER_NAME   = "Priya";              // ← put her name here
+const HER_NAME   = "Priya My Love";      // ← put her name here
 const BIRTHDAY   = "2026-06-06T00:00:00"; // ← her birthday (tomorrow)
 
 /* ─── Custom heart cursor ───────────────────────────── */
@@ -922,13 +1120,41 @@ function splitChars(el){
   return el.querySelectorAll('.char');
 }
 function splitWords(el){
-  const text=el.textContent; el.innerHTML='';
-  text.split(' ').forEach(w=>{
+  const words = el.textContent.trim().split(/\s+/); el.innerHTML='';
+  words.forEach((w)=>{
     const s=document.createElement('span');
-    s.className='sw'; s.textContent=w;
-    el.appendChild(s); el.appendChild(document.createTextNode(' '));
+    s.className='sw';
+    s.textContent = w;   // gap handled by CSS margin-right on .sw
+    el.appendChild(s);
   });
   return el.querySelectorAll('.sw');
+}
+/* split a multi-line heading: keeps <br> line breaks, wraps each word so it
+   never breaks mid-letter, and splits chars inside each word for animation */
+function splitHeadingChars(el){
+  // read the original markup line-by-line on <br>
+  const lines = el.innerHTML.split(/<br\s*\/?>/i).map(l=>{
+    const tmp=document.createElement('div'); tmp.innerHTML=l;
+    return (tmp.textContent||'').trim();
+  });
+  el.innerHTML='';
+  const chars=[];
+  lines.forEach((line,li)=>{
+    if(li>0) el.appendChild(document.createElement('br'));
+    line.split(/\s+/).forEach((word,wi,arr)=>{
+      const wordSpan=document.createElement('span');
+      wordSpan.className='fword';
+      [...word].forEach(ch=>{
+        const c=document.createElement('span');
+        c.className='char'; c.textContent=ch;
+        wordSpan.appendChild(c); chars.push(c);
+      });
+      el.appendChild(wordSpan);
+      // real space between words (outside the unbreakable word span)
+      if(wi<arr.length-1) el.appendChild(document.createTextNode(' '));
+    });
+  });
+  return chars;
 }
 
 /* ─── Scroll progress bar ───────────────────────────── */
@@ -978,23 +1204,58 @@ function enterSite(){
   }});
 }
 
-/* ─── HERO timeline ─────────────────────────────────── */
+/* split the chars INSIDE each .word so a word never wraps mid-letter */
+function splitTitleChars(titleEl){
+  const chars=[];
+  titleEl.querySelectorAll('.word').forEach(word=>{
+    const text=word.textContent; word.innerHTML='';
+    [...text].forEach(ch=>{
+      const s=document.createElement('span');
+      s.className='char'; s.textContent= ch===' '?' ':ch;
+      word.appendChild(s); chars.push(s);
+    });
+  });
+  return chars;
+}
+
+/* ─── HERO timeline — cinematic per-letter reveal ───── */
 function startHero(){
+  const titleEl=document.getElementById('hero-title');
+  const chars=splitTitleChars(titleEl);
+
   const tl=gsap.timeline({defaults:{ease:'expo.out'}});
-  const heroChars=splitChars(document.getElementById('hero-title'));
   tl.to('#hero-date',{opacity:1,y:0,duration:0.8},0)
-    .to(heroChars,{y:0,duration:1.2,stagger:0.04},0.3)
-    .to('#hero-line',{width:'340px',duration:1.0},0.8)
-    .to('#hero-sub',{opacity:1,duration:0.8},1.0)
-    .to('#scroll-hint',{opacity:1,duration:0.8},1.4);
+    .to('#hero-topline',{opacity:1,scaleX:1,duration:0.8},0.15)
+    .to('#hero-divider',{opacity:1,scaleX:1,duration:0.8},0.3)
+    // each letter rises, untilts and fades in, one after another
+    .to(chars,{
+      y:0, rotate:0, opacity:1,
+      duration:1.1, ease:'back.out(1.6)',
+      stagger:{each:0.06, from:'start'}
+    },0.3)
+    // glide the gradient shimmer across the finished title
+    .fromTo(chars,
+      {backgroundPosition:'200% center'},
+      {backgroundPosition:'0% center', duration:1.4, ease:'power2.inOut', stagger:0.01},
+      '>-0.4')
+    .to('#hero-line',{width:'340px',duration:1.0},'<')
+    .to('#hero-sub',{opacity:1,y:0,duration:0.8},'<+0.2')
+    .to('#scroll-hint',{opacity:1,duration:0.8},'>-0.2');
+
+  // gentle infinite shimmer loop so the title keeps feeling alive
+  gsap.to(chars,{
+    backgroundPosition:'-200% center',
+    duration:6, ease:'none', repeat:-1, delay:2.6
+  });
 }
 
 /* ─── SPOTLIGHT word-by-word pinned reveal ──────────── */
 function initScrollAnims(){
   const swords=splitWords(document.getElementById('spotlight-quote'));
+  const isMobile = window.matchMedia('(max-width: 640px)').matches;
   gsap.to(swords,{
     opacity:1, ease:'none', stagger:0.4,
-    scrollTrigger:{ trigger:'#spotlight', start:'top top', end:'+=120%', scrub:0.6, pin:true }
+    scrollTrigger:{ trigger:'#spotlight', start:'top top', end: isMobile ? '+=80%' : '+=120%', scrub:0.6, pin:true }
   });
 
   // Quote lines — clip-path wipe
@@ -1002,6 +1263,14 @@ function initScrollAnims(){
     gsap.to(line,{
       clipPath:'inset(0 0% 0 0)', duration:0.9, ease:'power3.out', delay:i*0.06,
       scrollTrigger:{ trigger:line, start:'top 88%', toggleActions:'play none none none' }
+    });
+  });
+
+  // Highlights cards
+  gsap.utils.toArray('.highlight-card').forEach((card,i)=>{
+    gsap.to(card,{
+      opacity:1, y:0, duration:0.9, ease:'power3.out', delay:i*0.12,
+      scrollTrigger:{ trigger:'#highlights', start:'top 75%' }
     });
   });
 
@@ -1015,7 +1284,7 @@ function initScrollAnims(){
 
   // Letter
   gsap.to('#letter-eyebrow',{opacity:1,duration:0.7,scrollTrigger:{trigger:'#letter',start:'top 80%'}});
-  const lChars=splitChars(document.getElementById('letter-heading'));
+  const lChars=splitHeadingChars(document.getElementById('letter-heading'));
   gsap.to(lChars,{y:0,duration:1.1,stagger:0.025,ease:'expo.out',scrollTrigger:{trigger:'#letter-heading',start:'top 85%'}});
   ['#lb1','#lb2','#lb3'].forEach((id,i)=>{
     gsap.to(id,{opacity:1,y:0,duration:0.9,delay:i*0.15,scrollTrigger:{trigger:id,start:'top 88%'}});
@@ -1023,7 +1292,7 @@ function initScrollAnims(){
   gsap.to('#letter-sig',{opacity:1,duration:0.8,scrollTrigger:{trigger:'#letter-sig',start:'top 90%'}});
 
   // Finale + confetti
-  const finalChars=splitChars(document.getElementById('finale-title'));
+  const finalChars=splitHeadingChars(document.getElementById('finale-title'));
   const finaleTl=gsap.timeline({
     scrollTrigger:{ trigger:'#finale', start:'top 60%',
       onEnter:()=>Confetti.burst() }
